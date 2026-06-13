@@ -1,0 +1,17 @@
+# dependencies
+node_modules
+
+# env (キーは絶対にコミットしない)
+.env
+.env.local
+.env.*.local
+
+# build output
+dist
+
+# vercel
+.vercel
+
+# misc
+.DS_Store
+*.log
