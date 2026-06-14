@@ -38,8 +38,8 @@ api/chat.js       … serverless function（Azure を呼ぶ・キーを持つ）
 - フロントに表示するテキストは `textContent` で挿入（`innerHTML` 禁止・XSS 対策）。
 
 ## 6. 開発ワークフロー（演習の核心）
-- **1 Issue = 1 スライス = 1 セッション = レビュー可能な小さなコミット**。
-- 着手前に対象 Issue を読む。完了したら Issue をクローズし、トラッキング #1 のチェックを入れる。
+- **1 Issue = 1 セッション = レビュー可能な小さなコミット**。作業の単位は **Issue 番号で参照する**（別途「スライス番号」は使わない）。
+- 着手前に対象 Issue を読む。**完了したら必ず Issue をクローズ**し（完了コメントを添える）、トラッキング #1 のチェックを入れる。
 - コミットは **Conventional Commits** で、Issue 番号を紐付ける:
   - 例: `feat: add /api/chat serverless function (#3)` / 本文末尾に `Closes #3`
   - 種別: `feat`（新機能） / `fix`（修正） / `refactor` / `docs` / `chore`
@@ -48,7 +48,7 @@ api/chat.js       … serverless function（Azure を呼ぶ・キーを持つ）
 
 ## 7. セッション再開手順（新しいセッションを開いたらまずこれ）
 現在地は次の3つを読めば一意に分かる:
-1. **トラッキング Issue #1**（`gh issue view 1`）… 7スライスのチェックリスト＝進捗ボード
+1. **トラッキング Issue #1**（`gh issue view 1`）… 全 Issue のチェックリスト＝進捗ボード
 2. **`git log --oneline`** … 何が積まれたか
 3. **`gh issue list`** … 残っているタスク
 
@@ -76,7 +76,7 @@ Message      = { role: "user" | "assistant", content: string }
 役割ごとに権限（使えるツール）を絞った専門エージェントを用意している。CRUD はツールに対応:
 Create=`Write` / Read=`Read`,`Glob`,`Grep` / Update=`Edit` / Delete=`Bash`の`rm`。
 
-- **ui-designer**（tools: Read, Write, Edit, Glob, Grep）… UI/表示層を作る・直す。`Bash`なし＝削除・任意コマンド不可。`api/`やキーには触らない。UI系スライス(#3,#4,#7)で使う。
-- **code-reviewer**（tools: Read, Glob, Grep, Bash）… 差分をレビューして**指摘だけ**返す。`Write`/`Edit`なし＝**コードを改変できない**。`Bash`は`git diff`/ビルド確認の検査用途のみ（改変操作はプロンプトで禁止）。各スライスをコミットする前に使う。
+- **ui-designer**（tools: Read, Write, Edit, Glob, Grep）… UI/表示層を作る・直す。`Bash`なし＝削除・任意コマンド不可。`api/`やキーには触らない。UI系 Issue（#4, #5, #7, #8）で使う。
+- **code-reviewer**（tools: Read, Glob, Grep, Bash）… 差分をレビューして**指摘だけ**返す。`Write`/`Edit`なし＝**コードを改変できない**。`Bash`は`git diff`/ビルド確認の検査用途のみ（改変操作はプロンプトで禁止）。各 Issue をコミットする前に使う。
 
 呼び出し: 自然言語で名前を出すか `@agent-ui-designer` / `@agent-code-reviewer`。
