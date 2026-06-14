@@ -71,3 +71,12 @@ Message      = { role: "user" | "assistant", content: string }
 
 ## 10. v1 スコープ外（やらない）
 ユーザー認証 / サーバー DB・Supabase / 返答のストリーミング表示 / 凝ったデザイン。
+
+## 11. マルチエージェント（`.claude/agents/`）
+役割ごとに権限（使えるツール）を絞った専門エージェントを用意している。CRUD はツールに対応:
+Create=`Write` / Read=`Read`,`Glob`,`Grep` / Update=`Edit` / Delete=`Bash`の`rm`。
+
+- **ui-designer**（tools: Read, Write, Edit, Glob, Grep）… UI/表示層を作る・直す。`Bash`なし＝削除・任意コマンド不可。`api/`やキーには触らない。UI系スライス(#3,#4,#7)で使う。
+- **code-reviewer**（tools: Read, Glob, Grep, Bash）… 差分をレビューして**指摘だけ**返す。`Write`/`Edit`なし＝**コードを改変できない**。`Bash`は`git diff`/ビルド確認の検査用途のみ（改変操作はプロンプトで禁止）。各スライスをコミットする前に使う。
+
+呼び出し: 自然言語で名前を出すか `@agent-ui-designer` / `@agent-code-reviewer`。
