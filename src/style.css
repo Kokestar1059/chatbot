@@ -1,0 +1,157 @@
+/* レイアウト。v1: 読みやすく素直なデザイン。 */
+
+:root {
+  --bg: #f5f5f7;
+  --panel: #ffffff;
+  --border: #e3e3e8;
+  --user-bg: #2f6fed;
+  --user-text: #ffffff;
+  --assistant-bg: #ececf1;
+  --assistant-text: #1d1d1f;
+  --muted: #8a8a8f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+    "Noto Sans JP", sans-serif;
+  line-height: 1.6;
+}
+
+/* アプリ全体: 中央寄せ・縦に伸縮する 1 カラム。 */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 16px;
+  gap: 12px;
+}
+
+/* メッセージ表示エリア: 縦スクロール可能・余った領域を埋める。 */
+#output {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* 吹き出し共通。 */
+.bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  /* 改行をそのまま表示・長文を折り返す。 */
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* user: 右寄せ・青背景。 */
+.bubble--user {
+  align-self: flex-end;
+  background: var(--user-bg);
+  color: var(--user-text);
+  border-bottom-right-radius: 4px;
+}
+
+/* assistant: 左寄せ・グレー背景。 */
+.bubble--assistant {
+  align-self: flex-start;
+  background: var(--assistant-bg);
+  color: var(--assistant-text);
+  border-bottom-left-radius: 4px;
+}
+
+/* typing バブル（送信中）。 */
+.bubble--typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+}
+
+.typing-dot {
+  animation: typing-blink 1.2s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-blink {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+/* 入力フォーム: 下部に配置・横いっぱい。 */
+#chat-form {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+#input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+#input:focus {
+  outline: none;
+  border-color: var(--user-bg);
+}
+
+#send {
+  flex: 0 0 auto;
+  padding: 12px 20px;
+  font-size: 16px;
+  color: #ffffff;
+  background: var(--user-bg);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#send:hover {
+  background: #2a63d4;
+}
+
+/* disabled の入力欄/ボタンは薄く表示。 */
+#input:disabled,
+#send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chatbot</title>
+    <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <div id="app">
-      <!-- #4: 履歴なしの最小ループ。吹き出し・複数会話は後続スライス。 -->
+      <!-- #5: 会話表示（吹き出し・複数メッセージ・送信中状態）。描画は src/ui.js。 -->
       <div id="output"></div>
       <form id="chat-form">
         <input
@@ -16,7 +17,7 @@
           autocomplete="off"
           placeholder="メッセージを入力"
         />
-        <button type="submit">送信</button>
+        <button id="send" type="submit">送信</button>
       </form>
     </div>
     <script type="module" src="/src/main.js"></script>
