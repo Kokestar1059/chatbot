@@ -6,7 +6,19 @@
     <title>Chatbot</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <!-- #4: 履歴なしの最小ループ。吹き出し・複数会話は後続スライス。 -->
+      <div id="output"></div>
+      <form id="chat-form">
+        <input
+          id="input"
+          type="text"
+          autocomplete="off"
+          placeholder="メッセージを入力"
+        />
+        <button type="submit">送信</button>
+      </form>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
