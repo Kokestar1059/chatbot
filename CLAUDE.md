@@ -39,6 +39,9 @@ api/chat.js       … serverless function（Azure を呼ぶ・キーを持つ）
 
 ## 6. 開発ワークフロー（演習の核心）
 - **1 Issue = 1 セッション = レビュー可能な小さなコミット**。作業の単位は **Issue 番号で参照する**（別途「スライス番号」は使わない）。
+- **1 Issue = 1 フィーチャーブランチ**。着手時に `git switch -c feat/<issue番号>-<短い説明>` を切る。
+  **`main` へ直コミットしない。** 完了・レビュー通過後に `main` へ戻して **fast-forward マージ**する（`--no-ff` は使わず線形履歴を維持）。
+  ※ FF マージは履歴に痕跡を残さないため「ブランチ運用かどうか」は `git log` から推測できない。だからここに明記する。
 - 着手前に対象 Issue を読む。**完了したら必ず Issue をクローズ**し（完了コメントを添える）、トラッキング #1 のチェックを入れる。
 - コミットは **Conventional Commits** で、Issue 番号を紐付ける:
   - 例: `feat: add /api/chat serverless function (#3)` / 本文末尾に `Closes #3`
