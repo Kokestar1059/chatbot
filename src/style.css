@@ -41,12 +41,15 @@ body {
   gap: 16px;
 }
 
-/* 左カラム: 履歴サイドバー。 */
+/* 左カラム: 履歴サイドバー。
+   min-width: 0 が無いと flex の既定 min-width:auto により、中の nowrap な
+   タイトル全長まで横に広がり flex-basis(240px) を無視してしまう。明示的に潰す。 */
 #sidebar {
   flex: 0 0 240px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
   min-height: 0;
 }
 
@@ -66,17 +69,25 @@ body {
   background: #2a63d4;
 }
 
-/* 会話一覧: 縦スクロール可能なリスト。 */
+/* 会話一覧: 縦スクロール可能なリスト。横ははみ出させない。 */
 #conversation-list {
   flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* 会話アイテム。 */
+/* 会話アイテム。タイトルが長くても幅は一定にし、超過分は「…」で省略する。
+   button 要素は flex の子だと text-overflow が効きにくいので
+   display:block + width:100% + min-width:0 で確実にクリップさせる。 */
 .conversation-item {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 10px 12px;
   font-size: 14px;
   color: #1d1d1f;
@@ -84,7 +95,9 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
-  /* 長いタイトルは省略表示。 */
+  /* 左寄せ（button の既定は中央寄せ）。 */
+  text-align: left;
+  /* 長いタイトルは1行で省略表示。 */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
