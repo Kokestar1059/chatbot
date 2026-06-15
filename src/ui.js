@@ -45,3 +45,30 @@ export function renderMessages(container, messages, options = {}) {
   // 描画後、一番下までスクロール。
   container.scrollTop = container.scrollHeight;
 }
+
+// 履歴サイドバーの会話一覧を描画する。
+// conversations: Array<{ id: string, title: string, messages: Array }>
+// activeId: 選択中の会話 id（一致するアイテムに active クラスを付ける）
+// onSelect: クリック時に onSelect(conversation.id) を呼ぶコールバック
+export function renderSidebar(container, conversations, activeId, onSelect) {
+  if (!container) return;
+
+  const nodes = [];
+  for (const conversation of conversations || []) {
+    const item = document.createElement("button");
+    item.type = "button";
+    const isActive = conversation.id === activeId;
+    item.className = isActive
+      ? "conversation-item conversation-item--active"
+      : "conversation-item";
+    // title が空文字ならフォールバック表示。textContent で挿入（innerHTML 禁止・XSS 対策）。
+    item.textContent = conversation.title || "新しい会話";
+    // クリックで会話を切り替える。
+    item.addEventListener("click", () => {
+      if (typeof onSelect === "function") onSelect(conversation.id);
+    });
+    nodes.push(item);
+  }
+  // 毎回中身を作り直す。
+  container.replaceChildren(...nodes);
+}

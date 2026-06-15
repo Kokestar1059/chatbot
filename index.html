@@ -8,9 +8,16 @@
   </head>
   <body>
     <div id="app">
-      <!-- #5: 会話表示（吹き出し・複数メッセージ・送信中状態）。描画は src/ui.js。 -->
-      <div id="output"></div>
-      <form id="chat-form">
+      <!-- #7: 履歴サイドバー（複数会話・New chat・切替）。描画は src/ui.js。 -->
+      <aside id="sidebar">
+        <button id="new-chat" type="button">+ New chat</button>
+        <div id="conversation-list"></div>
+      </aside>
+      <!-- 右カラム: 既存チャット（#5）。 -->
+      <main id="chat">
+        <!-- #5: 会話表示（吹き出し・複数メッセージ・送信中状態）。描画は src/ui.js。 -->
+        <div id="output"></div>
+        <form id="chat-form">
         <input
           id="input"
           type="text"
@@ -19,6 +26,7 @@
         />
         <button id="send" type="submit">送信</button>
       </form>
+      </main>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

@@ -29,16 +29,86 @@ body {
   line-height: 1.6;
 }
 
-/* アプリ全体: 中央寄せ・縦に伸縮する 1 カラム。 */
+/* アプリ全体: 中央寄せ・2 カラム（左:サイドバー / 右:チャット）。 */
 #app {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
-  max-width: 720px;
+  max-width: 1000px;
   height: 100vh;
   margin: 0 auto;
   padding: 16px;
+  gap: 16px;
+}
+
+/* 左カラム: 履歴サイドバー。 */
+#sidebar {
+  flex: 0 0 240px;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
+  min-height: 0;
+}
+
+/* New chat ボタン。 */
+#new-chat {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  font-size: 15px;
+  color: var(--user-text);
+  background: var(--user-bg);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#new-chat:hover {
+  background: #2a63d4;
+}
+
+/* 会話一覧: 縦スクロール可能なリスト。 */
+#conversation-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 会話アイテム。 */
+.conversation-item {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #1d1d1f;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  /* 長いタイトルは省略表示。 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-item:hover {
+  background: var(--assistant-bg);
+}
+
+/* 選択中の会話: 視覚的に区別。 */
+.conversation-item--active {
+  background: var(--assistant-bg);
+  border-color: var(--user-bg);
+  font-weight: 600;
+}
+
+/* 右カラム: チャット本体（既存の縦伸縮レイアウトをここに移す）。 */
+#chat {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* メッセージ表示エリア: 縦スクロール可能・余った領域を埋める。 */
