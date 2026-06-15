@@ -52,9 +52,3 @@ AZURE_OPENAI_DEPLOYMENT=gpt-4o-mini
 AZURE_OPENAI_API_VERSION=2024-10-21
 ```
 
-### 感想
-- [ここに感想を記入]
-
-### 参考記事
-- 1. [URLをここに記入]
-- 2. [URLをここに記入]
