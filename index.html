@@ -17,6 +17,8 @@
       <main id="chat">
         <!-- #5: 会話表示（吹き出し・複数メッセージ・送信中状態）。描画は src/ui.js。 -->
         <div id="output"></div>
+        <!-- #8: API 失敗時のエラー通知。普段は hidden、main.js が文言を入れて表示。 -->
+        <div id="error" role="alert" hidden></div>
         <form id="chat-form">
         <input
           id="input"

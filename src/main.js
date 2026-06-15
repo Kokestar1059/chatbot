@@ -4,7 +4,7 @@
 //     （#6 にあった messages エイリアスは廃止。切替で古い配列を指す事故を防ぐ）。
 //     タイトル自動生成は #8 のスコープ。
 import { sendChat } from "./chat.js";
-import { renderMessages, renderSidebar } from "./ui.js";
+import { renderMessages, renderSidebar, renderError } from "./ui.js";
 
 const form = document.querySelector("#chat-form");
 const input = document.querySelector("#input");
@@ -12,6 +12,17 @@ const output = document.querySelector("#output");
 const sendButton = document.querySelector("#send");
 const newChatButton = document.querySelector("#new-chat");
 const conversationList = document.querySelector("#conversation-list");
+const errorBox = document.querySelector("#error");
+
+// タイトル自動生成（#8）: 最初のユーザー発言から作る。
+// 連続する空白を 1 個に潰し、30 文字を超えたら切って「…」を付ける。
+const TITLE_MAX = 30;
+function makeTitle(text) {
+  const normalized = text.trim().replace(/\s+/g, " ");
+  return normalized.length > TITLE_MAX
+    ? `${normalized.slice(0, TITLE_MAX)}…`
+    : normalized;
+}
 
 // localStorage キー（§9）。値は Conversation[] の JSON。
 const STORAGE_KEY = "chatbot:v1:conversations";
@@ -78,9 +89,14 @@ function save() {
   }
 }
 
+// サイドバーだけを再描画する（タイトル変更時など）。引数の取り違えを一箇所に集約。
+function refreshSidebar() {
+  renderSidebar(conversationList, conversations, activeId, selectConversation);
+}
+
 // サイドバーと本文をまとめて再描画する。
 function renderAll(options = {}) {
-  renderSidebar(conversationList, conversations, activeId, selectConversation);
+  refreshSidebar();
   const conv = activeConversation();
   renderMessages(output, conv ? conv.messages : [], options);
 }
@@ -90,6 +106,8 @@ function selectConversation(id) {
   if (sending) return;
   if (id === activeId) return;
   activeId = id;
+  // エラーは送信単位の表示。会話を切り替えたら消す。
+  renderError(errorBox, "");
   renderAll();
   input.focus();
 }
@@ -104,6 +122,8 @@ function newChat() {
     return;
   }
   createConversation();
+  // 直前のエラー表示を残さない。
+  renderError(errorBox, "");
   save();
   renderAll();
   input.focus();
@@ -137,8 +157,18 @@ form.addEventListener("submit", async (event) => {
   const conv = activeConversation();
   if (!conv) return;
 
+  // 再送に備えて前回のエラー表示をクリア。
+  renderError(errorBox, "");
+
   // user 発言を履歴に積んで即描画 + 保存。
   conv.messages.push({ role: "user", content: text });
+  // タイトル未設定（＝最初の発言）なら、この発言から自動生成する。
+  // 送信失敗で発言を取り消したときに戻せるよう、今回付けたかを覚えておく。
+  const titleAssignedNow = !conv.title;
+  if (titleAssignedNow) {
+    conv.title = makeTitle(text);
+    refreshSidebar();
+  }
   save();
   input.value = "";
   setSending(true);
@@ -153,11 +183,17 @@ form.addEventListener("submit", async (event) => {
   } catch (err) {
     console.error(err);
     // 失敗時は積んだ user 発言を取り消して保存し、入力欄に書き戻して再送できるようにする。
-    // エラー表示の作り込みは #8。
     conv.messages.pop();
+    // 今回のタイトルもこの発言から付けたものなので、空の会話に戻す。
+    if (titleAssignedNow) {
+      conv.title = "";
+      refreshSidebar();
+    }
     save();
     input.value = text;
     renderMessages(output, conv.messages);
+    // 何が起きたかが分かるエラーを表示（詳細は console、画面には汎用メッセージ）。
+    renderError(errorBox, "送信に失敗しました。接続や Azure の設定を確認して、もう一度お試しください。");
   } finally {
     setSending(false);
     input.focus();

@@ -182,6 +182,17 @@ body {
   }
 }
 
+/* #8: エラー通知。input の上に控えめな赤い帯で出す。hidden 属性で開閉。 */
+#error {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #8a1f1f;
+  background: #fdecec;
+  border: 1px solid #f3c2c2;
+  border-radius: 10px;
+}
+
 /* 入力フォーム: 下部に配置・横いっぱい。 */
 #chat-form {
   display: flex;
@@ -224,4 +235,23 @@ body {
 #send:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* 狭い画面: サイドバーを上に積んで、チャットを広く使う。 */
+@media (max-width: 640px) {
+  #app {
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  /* サイドバーは高さを抑え、会話一覧を横スクロールさせない（縦の短いリストに）。 */
+  #sidebar {
+    flex: 0 0 auto;
+    max-height: 35vh;
+  }
+
+  .bubble {
+    max-width: 90%;
+  }
 }

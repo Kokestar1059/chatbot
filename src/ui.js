@@ -46,6 +46,15 @@ export function renderMessages(container, messages, options = {}) {
   container.scrollTop = container.scrollHeight;
 }
 
+// エラー通知を描画する（#8）。message が空なら隠す。
+// container: #error 要素。message: 表示する文言（空文字で非表示）。
+// textContent で挿入（innerHTML 禁止・XSS 対策）。
+export function renderError(container, message) {
+  if (!container) return;
+  container.textContent = message || "";
+  container.hidden = !message;
+}
+
 // 履歴サイドバーの会話一覧を描画する。
 // conversations: Array<{ id: string, title: string, messages: Array }>
 // activeId: 選択中の会話 id（一致するアイテムに active クラスを付ける）
